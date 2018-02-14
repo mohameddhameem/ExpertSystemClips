@@ -74,6 +74,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExpSysResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="HelperClass.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
