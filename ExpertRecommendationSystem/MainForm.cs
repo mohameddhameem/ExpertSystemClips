@@ -21,9 +21,18 @@ namespace ExpertRecommendationSystem
         {
             ConsoleTraceListener tl = new ConsoleTraceListener();
             InitializeComponent();
+            openFileDialogCLP.DefaultExt =".clp";
+            openFileDialogCLP.Filter = "Clips files (*.clp) | *.clp";
+            DialogResult result = openFileDialogCLP.ShowDialog();
+            string filePath = string.Empty;
+            if (result == DialogResult.OK) // Test result.
+            {
+                filePath = openFileDialogCLP.FileName;
+                MessageBox.Show("Load CLP successfull from :" + filePath);
+            }
             clipsEnvironment.AddRouter(new DebugRouter());
             var path = @"ClipsScript.clp";
-            clipsEnvironment.Load(path);
+            clipsEnvironment.Load(filePath);
             clipsEnvironment.Reset();
         }
         private void OnClickButton(object sender, EventArgs e)
@@ -102,16 +111,20 @@ namespace ExpertRecommendationSystem
 
                 using (MultifieldValue validAnswers = (MultifieldValue)evalFact.GetFactSlot("valid-answers"))
                 {
+                    //clear of the old label
+                    lblAnsClips.Text = string.Empty;
                     String selected = evalFact.GetFactSlot("response").ToString();
                     for (int i = 0; i < validAnswers.Count; i++)
                     {
                         RadioButton rb = new RadioButton();
                         rb.Text = (SymbolValue)validAnswers[i];
                         rb.Tag = rb.Text;
+                        lblAnsClips.Text = lblAnsClips.Text + " "+ rb.Text;
                         rb.Visible = true;
                         rb.Location = new Point(10, 20 * (i + 1));
                         choicesPanel.Controls.Add(rb);
                     }
+                    lblAnsClips.Text = lblAnsClips.Text + " :Updated on " + DateTime.Now.ToLongTimeString();
                 }
                 messageLabel.Text = GetString((SymbolValue)evalFact.GetFactSlot("display"));
             }
@@ -135,13 +148,13 @@ namespace ExpertRecommendationSystem
             return null;
         }
         private string GetString(string name)
-        {
+        {            
             return ExpSysResources.ResourceManager.GetString(name);
         }
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             NextUIState();
-        }
+        }        
     }
 }
